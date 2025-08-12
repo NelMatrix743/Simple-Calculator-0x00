@@ -40,7 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     expressionResult,
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
