@@ -6,3 +6,47 @@ bool isDigit(String char) {
 }
 
 bool isAnOperator(String buttonKey) => !isDigit(buttonKey);
+
+(String, String) clearAllInput(
+  String inputExpression,
+  String expressionResult,
+) {
+  inputExpression = "0";
+  expressionResult = "0";
+  return (inputExpression, expressionResult);
+}
+
+String clearLastInput(String inputExpression) {
+  if (isDigit(inputExpression[inputExpression.length - 1])) {
+    // to clear digit
+    return inputExpression.substring(0, inputExpression.length - 1);
+  }
+  // to clear operator
+  return inputExpression.substring(0, inputExpression.length - 3);
+}
+
+String insertDigit(int index, String inputExpression) {
+  if (inputExpression.startsWith("0")) {
+    inputExpression = "";
+  }
+  return inputExpression + supportedButtonKeys[index];
+}
+
+String insertOperator(int index, String inputExpression) {
+  if (isDigit(inputExpression[inputExpression.length - 1])) {
+    inputExpression += " ${inputExpression[index]} ";
+  }
+  return inputExpression;
+}
+
+String computeExpression(String inputExpression) {
+  num exprResult;
+  GrammarParser parser = GrammarParser();
+  ContextModel context = ContextModel();
+  RealEvaluator exprEvaluator = RealEvaluator(context);
+  Expression expr = parser.parse(inputExpression);
+  exprResult = exprEvaluator.evaluate(expr);
+  return (exprResult % 1 == 0)
+      ? exprResult.toInt().toString()
+      : exprResult.toString();
+}
