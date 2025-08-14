@@ -13,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String inputExpression = "0";
   String expressionResult = "0";
+  String answerHolder = "";
+  bool EXPRESSION_RESULT_CHANGED = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           SizedBox(height: 40),
           Expanded(
+            // user input section
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -51,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
+            // calculator button section
             flex: 2,
             child: GridView.builder(
               itemCount: supportedButtonKeys.length,
@@ -59,11 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               itemBuilder: (BuildContext context, int index) =>
                   CalculatorButton(
-                    buttonOnClick: () {
-                      setState(() {
-                        inputExpression += supportedButtonKeys[index];
-                      });
-                    },
                     buttonText: supportedButtonKeys[index],
                     buttonColor: isAnOperator(supportedButtonKeys[index])
                         ? Colors.deepPurple
@@ -71,6 +70,49 @@ class _HomeScreenState extends State<HomeScreen> {
                     buttonTextColor: isAnOperator(supportedButtonKeys[index])
                         ? Colors.white
                         : Colors.deepPurple,
+                    buttonOnClick: () {
+                      if (isDigit(supportedButtonKeys[index])) {
+                        inputExpression = insertDigit(index, inputExpression);
+                      } else {
+                        switch (index) {
+                          case 0: // for C
+                            (String, String) result = clearAllInput(
+                              inputExpression,
+                              expressionResult,
+                            );
+                            inputExpression = result.$1;
+                            expressionResult = result.$2;
+                            break;
+                          case 1: // for DEL
+                            inputExpression = clearLastInput(inputExpression);
+                            break;
+                          case 18: // for ANS
+                            inputExpression = insertAnswer(
+                              inputExpression,
+                              answerHolder,
+                            );
+                          case 19: // for EQU(=)
+                            expressionResult = computeExpression(
+                              inputExpression,
+                            );
+                            answerHolder = expressionResult;
+                            EXPRESSION_RESULT_CHANGED = true;
+                            break;
+                          default: // for arithmetic operators
+                            inputExpression = insertOperator(
+                              index,
+                              inputExpression,
+                            );
+                        }
+                      }
+                      setState(() {
+                        inputExpression = inputExpression;
+                        if (EXPRESSION_RESULT_CHANGED) {
+                          expressionResult = expressionResult;
+                          EXPRESSION_RESULT_CHANGED = false;
+                        }
+                      });
+                    },
                   ),
             ),
           ),
