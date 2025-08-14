@@ -42,6 +42,15 @@ String insertOperator(int index, String inputExpression) {
   return inputExpression;
 }
 
+String insertAnswer(String inputExpression, String expressionResult) {
+  if (inputExpression.startsWith("0")) {
+    inputExpression = expressionResult;
+  } else if (!isDigit(inputExpression[inputExpression.length - 1])) {
+    inputExpression += expressionResult;
+  }
+  return inputExpression;
+}
+
 String computeExpression(String inputExpression) {
   num exprResult;
   GrammarParser parser = GrammarParser();
