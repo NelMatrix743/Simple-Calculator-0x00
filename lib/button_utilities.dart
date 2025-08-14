@@ -19,6 +19,9 @@ bool isAnOperator(String buttonKey) => !isDigit(buttonKey);
 String clearLastInput(String inputExpression) {
   if (isDigit(inputExpression[inputExpression.length - 1])) {
     // to clear digit
+    if (inputExpression.length == 1) {
+      return "0";
+    }
     return inputExpression.substring(0, inputExpression.length - 1);
   }
   // to clear operator
@@ -34,7 +37,7 @@ String insertDigit(int index, String inputExpression) {
 
 String insertOperator(int index, String inputExpression) {
   if (isDigit(inputExpression[inputExpression.length - 1])) {
-    inputExpression += " ${inputExpression[index]} ";
+    inputExpression += " ${supportedButtonKeys[index]} ";
   }
   return inputExpression;
 }
